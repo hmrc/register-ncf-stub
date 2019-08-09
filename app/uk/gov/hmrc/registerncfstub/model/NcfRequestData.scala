@@ -20,10 +20,7 @@ import play.api.libs.json.Json
 
 
 
-/**
- * Created by akhileshkumar on 08/08/2019.
- */
-case class NcfRequestData(MRN:String, Office:String)
+case class NcfRequestData(MRN:String, Office:Option[String])
 
 object NcfRequestData {
   implicit val formats = Json.format[NcfRequestData]

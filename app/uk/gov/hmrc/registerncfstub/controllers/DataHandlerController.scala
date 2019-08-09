@@ -17,7 +17,7 @@
 package uk.gov.hmrc.registerncfstub.controllers
 
 import java.io.FileNotFoundException
-import javax.inject.Inject
+import javax.inject.{Singleton, Inject}
 
 import play.api.http.MimeTypes
 import play.api.libs.json._
@@ -29,19 +29,19 @@ import uk.gov.hmrc.registerncfstub.model.NcfRequestData
 import scala.concurrent.Future
 import scala.io.Source
 
-/**
- * Created by akhileshkumar on 08/08/2019.
- */
+
+@Singleton
 class DataHandlerController @Inject()(appConfig: AppConfig, cc: ControllerComponents)
   extends BackendController(cc) {
 
   private val basePath = "/resources/data"
+  private val UNKNOWN =  "UNKNOWN"
 
   def receiveNcfData = Action.async(parse.json) {
     implicit request =>
       withJsonBody[NcfRequestData] {
-        nfcData =>
-        val filePath = basePath  + "/" + nfcData.Office + "/" + nfcData.MRN + "/" +  "response.json"
+        ncfData =>
+        val filePath = basePath  + "/" + ncfData.Office.getOrElse(UNKNOWN) + "/" + ncfData.MRN + "/" +  "response.json"
         try {
           val jsonOption = resourceAsString(filePath) map { body =>
             Json.parse(body)
@@ -49,8 +49,8 @@ class DataHandlerController @Inject()(appConfig: AppConfig, cc: ControllerCompon
           val json = Json.prettyPrint(jsonOption.getOrElse(throw new FileNotFoundException()))
           Future.successful(Ok(json).as(MimeTypes.JSON))
         } catch {
-          case e1: FileNotFoundException => Future.successful(Ok("{\"ErrorDescription\": \"Data Not Found\"}").as(MimeTypes.JSON))
-          case e => Future.failed(e)
+          case _ : FileNotFoundException => Future.successful(Ok("""{"MRN": "N/A", "ResponseCode":-1,"ErrorDescription":"File Not Found"}""").as(MimeTypes.JSON))
+          case ex : Exception => Future.failed(ex)
         }
       }
   }

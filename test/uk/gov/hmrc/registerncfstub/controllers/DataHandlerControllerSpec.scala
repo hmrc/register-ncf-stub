@@ -29,9 +29,6 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.registerncfstub.config.AppConfig
 
 
-/**
- * Created by akhileshkumar on 08/08/2019.
- */
 class DataHandlerControllerSpec extends WordSpec with UnitSpec with Matchers with GuiceOneAppPerSuite {
 
   implicit lazy val materializer: Materializer = app.materializer
@@ -45,9 +42,9 @@ class DataHandlerControllerSpec extends WordSpec with UnitSpec with Matchers wit
 
   "The DataHandlerController" should {
     "POST /ncfdata/submit return 200 with responseCode : 0" in {
-      val requestData = """ { "MRN": "18AT320000TVWJYM68", "Office":"GB000011" }"""
+      val requestData = """ { "MRN": "19GB0000601001FBD8", "Office":"GB000060" }"""
 
-      val expectedJson = Json.parse("""{ "MRN": "18AT320000TVWJYM68", "ResponseCode":0 }""")
+      val expectedJson = Json.parse("""{ "MRN": "19GB0000601001FBD8", "ResponseCode":0 }""")
       val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> "application/json")), body = Json.parse(requestData))
       val result = await(controller.receiveNcfData(fakeRequest))
       status(result) shouldBe Status.OK
