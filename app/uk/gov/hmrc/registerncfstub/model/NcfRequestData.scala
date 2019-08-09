@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.registerncfstub.controllers
+package uk.gov.hmrc.registerncfstub.model
 
-import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import uk.gov.hmrc.play.bootstrap.controller.BackendController
-import uk.gov.hmrc.registerncfstub.config.AppConfig
+import play.api.libs.json.Json
 
-import scala.concurrent.Future
 
-@Singleton()
-class MicroserviceHelloWorldController @Inject()(appConfig: AppConfig, cc: ControllerComponents)
-    extends BackendController(cc) {
 
-  def hello(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok("Hello world"))
-  }
+/**
+ * Created by akhileshkumar on 08/08/2019.
+ */
+case class NcfRequestData(MRN:String, Office:String)
+
+object NcfRequestData {
+  implicit val formats = Json.format[NcfRequestData]
 }
