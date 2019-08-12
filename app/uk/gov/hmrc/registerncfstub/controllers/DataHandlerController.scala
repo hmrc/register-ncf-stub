@@ -42,6 +42,7 @@ class DataHandlerController @Inject()(appConfig: AppConfig, cc: ControllerCompon
       withJsonBody[NcfRequestData] {
         ncfData =>
         val filePath = basePath  + "/" + ncfData.Office.getOrElse(UNKNOWN) + "/" + ncfData.MRN + "/" +  "response.json"
+        val defaultResponse = "{\"MRN\": \""+ ncfData.MRN + "\", \"ResponseCode\":0\"}"
         try {
           val jsonOption = resourceAsString(filePath) map { body =>
             Json.parse(body)
@@ -49,18 +50,11 @@ class DataHandlerController @Inject()(appConfig: AppConfig, cc: ControllerCompon
           val json = Json.prettyPrint(jsonOption.getOrElse(throw new FileNotFoundException()))
           Future.successful(Ok(json).as(MimeTypes.JSON))
         } catch {
-          case _ : FileNotFoundException => Future.successful(Ok("""{"MRN": "N/A", "ResponseCode":-1,"ErrorDescription":"File Not Found"}""").as(MimeTypes.JSON))
+
+          case _ : FileNotFoundException => Future.successful(Ok(defaultResponse).as(MimeTypes.JSON))
           case ex : Exception => Future.failed(ex)
         }
       }
-  }
-
-  private def isValidMrn(mrn:String) : Boolean = true
-
-  private def isValidOffice(office:String) : Boolean = true
-
-  private def isValidRequestData(mrn:String,office:String ) : Boolean = {
-    isValidMrn(mrn) && isValidOffice(office:String)
   }
 
   private def resourceAsString(resourcePath: String): Option[String] = {

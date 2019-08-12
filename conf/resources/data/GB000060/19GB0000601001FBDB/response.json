@@ -1,5 +1,5 @@
 {
   "MRN": "19GB0000601001FBDB",
   "ResponseCode":2,
-  "ErrorDescription":"Invalid MRN' (check digit should be '8' not 'B')"
+  "ErrorDescription":"Invalid MRN"
 }

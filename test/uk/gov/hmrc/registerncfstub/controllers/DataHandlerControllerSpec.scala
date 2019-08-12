@@ -51,5 +51,28 @@ class DataHandlerControllerSpec extends WordSpec with UnitSpec with Matchers wit
       expectedJson shouldBe jsonBodyOf(result)
 
     }
+
+    "POST /ncfdata/submit return 200 with responseCode : 0 for FileNotFound (If MRN does exist)" in {
+      val requestData = """ { "MRN": "19GB0000601001F", "Office":"GB000060" }"""
+
+      val expectedJson = Json.parse("""{"MRN":"19GB0000601001F","ResponseCode":0,"ErrorDescription":"File Not Found"}""")
+      val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> "application/json")), body = Json.parse(requestData))
+      val result = await(controller.receiveNcfData(fakeRequest))
+      status(result) shouldBe Status.OK
+      expectedJson shouldBe jsonBodyOf(result)
+
+    }
+
+    "POST /ncfdata/submit return 200 with responseCode : 0 for FileNotFound (If Office does not exist. Default Scenario)" in {
+      val requestData = """ { "MRN": "19GB0000601001FBD8" }"""
+
+      val expectedJson = Json.parse("""{"MRN":"19GB0000601001FBD8","ResponseCode":0,"ErrorDescription":"File Not Found"}""")
+      val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> "application/json")), body = Json.parse(requestData))
+      val result = await(controller.receiveNcfData(fakeRequest))
+      status(result) shouldBe Status.OK
+      expectedJson shouldBe jsonBodyOf(result)
+
+    }
+
   }
 }
