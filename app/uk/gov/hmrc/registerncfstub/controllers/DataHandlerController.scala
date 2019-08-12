@@ -19,7 +19,6 @@ package uk.gov.hmrc.registerncfstub.controllers
 import java.io.FileNotFoundException
 import javax.inject.{Singleton, Inject}
 
-import play.api.http.MimeTypes
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
@@ -47,16 +46,15 @@ class DataHandlerController @Inject()(appConfig: AppConfig, cc: ControllerCompon
               val jsonOption = resourceAsString(filePath) map { body =>
                 Json.parse(body)
               }
-              val json = Json.prettyPrint(jsonOption.getOrElse(throw new FileNotFoundException()))
-              Future.successful(Ok(json).as(MimeTypes.JSON))
-
+              val json = jsonOption.getOrElse(throw new FileNotFoundException())
+              Future.successful(Ok(json))
           } catch {
-              case _ : FileNotFoundException => Future.successful(Ok("{\"MRN\": \""+ ncfData.MRN + "\", \"ResponseCode\":0 }").as(MimeTypes.JSON))
-              case ex : Exception => Future.failed(ex)
+            case _ : FileNotFoundException => Future.successful(Ok(Json.obj("MRN" -> s"${ncfData.MRN}","ResponseCode" -> 0)))
+            case ex : Exception => Future.failed(ex)
           }
       }
       case _ =>
-        Future.successful(Ok("{\"ResponseCode\":1,\"ErrorDescription\":\"Parsing Error: Request Message could not be read\"}").as(MimeTypes.JSON))
+        Future.successful(Ok(Json.obj("ResponseCode" -> 1,"ErrorDescription" ->"Parsing Error: Request Message could not be read")))
     }
 
 }

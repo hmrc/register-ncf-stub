@@ -51,7 +51,7 @@ class DataHandlerControllerSpec extends WordSpec with UnitSpec with Matchers wit
 
     }
 
-    "POST /ncfdata/submit return 200 with responseCode : 0 for FileNotFound (If MRN does exist)" in {
+    "POST /ncfdata/submit return 200 with responseCode : 0 for FileNotFound " in {
       val requestData = """ { "MRN": "19GB0000601001F", "Office":"GB000060" }"""
 
       val expectedJson = Json.parse("""{"MRN":"19GB0000601001F","ResponseCode":0}""")
