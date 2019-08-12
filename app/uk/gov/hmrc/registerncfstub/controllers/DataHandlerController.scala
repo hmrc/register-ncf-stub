@@ -28,6 +28,7 @@ import uk.gov.hmrc.registerncfstub.model.NcfRequestData
 
 import scala.concurrent.Future
 import scala.io.Source
+import scala.util.{Success, Try}
 
 
 @Singleton
@@ -35,28 +36,30 @@ class DataHandlerController @Inject()(appConfig: AppConfig, cc: ControllerCompon
   extends BackendController(cc) {
 
   private val basePath = "/resources/data"
-  private val UNKNOWN =  "UNKNOWN"
 
   def receiveNcfData = Action.async(parse.json) {
-    implicit request =>
-      withJsonBody[NcfRequestData] {
-        ncfData =>
-        val filePath = basePath  + "/" + ncfData.Office.getOrElse(UNKNOWN) + "/" + ncfData.MRN + "/" +  "response.json"
-        val defaultResponse = "{\"MRN\": \""+ ncfData.MRN + "\", \"ResponseCode\":0\"}"
-        try {
-          val jsonOption = resourceAsString(filePath) map { body =>
-            Json.parse(body)
+  implicit request =>
+
+    Try(request.body.validate[NcfRequestData]) match {
+      case Success(JsSuccess(ncfData, _)) => {
+          try {
+              val filePath = basePath  + "/" + ncfData.Office + "/" + ncfData.MRN + "/" +  "response.json"
+              val jsonOption = resourceAsString(filePath) map { body =>
+                Json.parse(body)
+              }
+              val json = Json.prettyPrint(jsonOption.getOrElse(throw new FileNotFoundException()))
+              Future.successful(Ok(json).as(MimeTypes.JSON))
+
+          } catch {
+              case _ : FileNotFoundException => Future.successful(Ok("{\"MRN\": \""+ ncfData.MRN + "\", \"ResponseCode\":0 }").as(MimeTypes.JSON))
+              case ex : Exception => Future.failed(ex)
           }
-          val json = Json.prettyPrint(jsonOption.getOrElse(throw new FileNotFoundException()))
-          Future.successful(Ok(json).as(MimeTypes.JSON))
-        } catch {
-
-          case _ : FileNotFoundException => Future.successful(Ok(defaultResponse).as(MimeTypes.JSON))
-          case ex : Exception => Future.failed(ex)
-        }
       }
-  }
+      case _ =>
+        Future.successful(Ok("{\"ResponseCode\":1,\"ErrorDescription\":\"Parsing Error: Request Message could not be read\"}").as(MimeTypes.JSON))
+    }
 
+}
   private def resourceAsString(resourcePath: String): Option[String] = {
     Option(getClass.getResourceAsStream(resourcePath)) map { is =>
       Source.fromInputStream(is).getLines.mkString("\n")

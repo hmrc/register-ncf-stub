@@ -21,7 +21,6 @@ import org.scalatest.{Matchers, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.libs.json.Json
-import play.api.test.Helpers._
 import play.api.test.{FakeRequest,FakeHeaders, Helpers}
 import play.api.{Mode, Configuration, Environment}
 import uk.gov.hmrc.play.bootstrap.config.{RunMode, ServicesConfig}
@@ -55,7 +54,7 @@ class DataHandlerControllerSpec extends WordSpec with UnitSpec with Matchers wit
     "POST /ncfdata/submit return 200 with responseCode : 0 for FileNotFound (If MRN does exist)" in {
       val requestData = """ { "MRN": "19GB0000601001F", "Office":"GB000060" }"""
 
-      val expectedJson = Json.parse("""{"MRN":"19GB0000601001F","ResponseCode":0,"ErrorDescription":"File Not Found"}""")
+      val expectedJson = Json.parse("""{"MRN":"19GB0000601001F","ResponseCode":0}""")
       val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> "application/json")), body = Json.parse(requestData))
       val result = await(controller.receiveNcfData(fakeRequest))
       status(result) shouldBe Status.OK
@@ -63,16 +62,17 @@ class DataHandlerControllerSpec extends WordSpec with UnitSpec with Matchers wit
 
     }
 
-    "POST /ncfdata/submit return 200 with responseCode : 0 for FileNotFound (If Office does not exist. Default Scenario)" in {
+    "POST /ncfdata/submit return 200 with responseCode : 1 for Parsing Error: Request Message could not be read" in {
       val requestData = """ { "MRN": "19GB0000601001FBD8" }"""
 
-      val expectedJson = Json.parse("""{"MRN":"19GB0000601001FBD8","ResponseCode":0,"ErrorDescription":"File Not Found"}""")
+      val expectedJson = Json.parse("""{"ResponseCode":1,"ErrorDescription":"Parsing Error: Request Message could not be read"}""")
       val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> "application/json")), body = Json.parse(requestData))
       val result = await(controller.receiveNcfData(fakeRequest))
       status(result) shouldBe Status.OK
       expectedJson shouldBe jsonBodyOf(result)
 
     }
+
 
   }
 }
