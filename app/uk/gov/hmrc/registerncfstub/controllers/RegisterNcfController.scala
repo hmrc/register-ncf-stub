@@ -24,7 +24,7 @@ import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 import uk.gov.hmrc.registerncfstub.config.AppConfig
-import uk.gov.hmrc.registerncfstub.model._
+import uk.gov.hmrc.registerncfstub.model.{Eis5xxError, _}
 import uk.gov.hmrc.registerncfstub.services.RegisterNcfService
 @Singleton
 class RegisterNcfController @Inject()(appConfig: AppConfig, registerNcfService: RegisterNcfService, cc: ControllerComponents)
@@ -43,6 +43,7 @@ class RegisterNcfController @Inject()(appConfig: AppConfig, registerNcfService: 
           case InvalidStateOot(mrn, responseCode, e)      => BadRequest(Json.toJson(NcfResponse(mrn, responseCode, Some(e))))
           case InvalidCustomsOffice(mrn, responseCode, e) => BadRequest(Json.toJson(NcfResponse(mrn, responseCode, Some(e))))
           case OotNotForCountry(mrn, responseCode, e)     => BadRequest(Json.toJson(NcfResponse(mrn, responseCode, Some(e))))
+          case Eis5xxError                                => InternalServerError
         }
       case JsError(errors) =>
         BadRequest(

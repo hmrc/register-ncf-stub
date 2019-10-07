@@ -133,5 +133,13 @@ class RegisterNcfControllerSpec extends WordSpec with UnitSpec with Matchers wit
       status(result)     shouldBe BAD_REQUEST
       jsonBodyOf(result) shouldBe expectedResponse
     }
+
+    "Return a 5xx response for any other server error from EIS" in {
+      val requestData = Json.toJson(NcfRequestData("19GB0000601001FB50", "GB000060"))
+
+      val result = await(controller.receiveNcfData(FakeRequest().withBody(requestData)))
+
+      status(result) shouldBe INTERNAL_SERVER_ERROR
+    }
   }
 }

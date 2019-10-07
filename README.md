@@ -67,4 +67,16 @@ Below are the different unhappy path scenarios:
 | Invalid customs office | 06 |
 | Office of transit does not belong to country | 07 |
 
+###EIS 5xx error:
+In the case where there is a problem with EIS, we will receive a 5xx response from them. In order to trigger this scenario, supply an MRN with '50' at the end.
+
+```
+Request Body example:
+{
+    "MRN": "18GB0000601001EB50",
+    "Office":"GB000011"
+}
+```
+
+> Response status: 500
 
