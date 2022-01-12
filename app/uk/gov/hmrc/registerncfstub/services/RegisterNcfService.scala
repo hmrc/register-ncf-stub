@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import uk.gov.hmrc.registerncfstub.model._
 @Singleton
 class RegisterNcfService @Inject()(appConfig: AppConfig) {
 
+  val logger = Logger(this.getClass.getName)
+
   def processRegisterNcfRequest(ncfRequestData: NcfRequestData): NcfResult =
     ncfRequestData.MRN.dropRight(1).takeRight(2) match {
       case "00" => CompletedSuccessfully(ncfRequestData.MRN)
@@ -40,7 +42,7 @@ class RegisterNcfService @Inject()(appConfig: AppConfig) {
       case "41" => CompletedSuccessfully("THREADINGISSUEMRN")
       case "50" => Eis500Error
       case "54" => {
-        Logger.info("Request to EIS is due to time out....")
+        logger.info("Request to EIS is due to time out....")
         Thread.sleep(100000000)
         CompletedSuccessfully(ncfRequestData.MRN)
       }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,8 @@ class RegisterNcfController @Inject()(
     extends BackendController(cc)
     with Delays {
 
+  val logger = Logger(this.getClass.getName)
+
   val scheduler:         Scheduler   = actorSystem.scheduler
   val ncfAPIDelayConfig: DelayConfig = Delays.config("ncfAPIDelay", actorSystem.settings.config)
 
@@ -52,14 +54,14 @@ class RegisterNcfController @Inject()(
       request.body.validate[NcfRequestData] match {
         case JsSuccess(t, _) =>
           if (t.Office.startsWith("XI"))
-            Logger.info("Received request with NI office code")
+            logger.info("Received request with NI office code")
           else {
-            Logger.info("Received request with GB office code")
+            logger.info("Received request with GB office code")
           }
 
           registerNcfService.processRegisterNcfRequest(t) match {
             case CompletedSuccessfully(mrn, responseCode) =>
-              Logger.info(s"NCF returning response code $responseCode with HTTP status code 200 for MRN $mrn")
+              logger.info(s"NCF returning response code $responseCode with HTTP status code 200 for MRN $mrn")
               responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, None))))
             case TechnicalError(mrn, responseCode, e) =>
               logResponse(mrn, responseCode, e, 400)
@@ -87,7 +89,7 @@ class RegisterNcfController @Inject()(
               responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
             case SchemaValidationError => returnSchemaValidationError
             case Eis500Error =>
-              Logger.info("NCF returning HTTP status code 500")
+              logger.info("NCF returning HTTP status code 500")
               responseWithCorrelationIdHeader(InternalServerError)
           }
         case JsError(_) =>
@@ -97,7 +99,7 @@ class RegisterNcfController @Inject()(
   }
 
   private def returnSchemaValidationError()(implicit correlationId: String): Result = {
-    Logger.info("NCF returning HTTP status code 400 because payload failed schema validation")
+    logger.info("NCF returning HTTP status code 400 because payload failed schema validation")
 
     responseWithCorrelationIdHeader(
       BadRequest(
@@ -118,6 +120,6 @@ class RegisterNcfController @Inject()(
     r.withHeaders("X-Correlation-ID" -> correlationId)
 
   private def logResponse(mrn: String, responseCode: Int, errorDescription: String, httpStatusCode: Int = 200): Unit =
-    Logger.info(
+    logger.info(
       s"""NCF returning response code ${responseCode.toString} with error "$errorDescription" and HTTP status code ${httpStatusCode.toString} for MRN $mrn""")
 }
