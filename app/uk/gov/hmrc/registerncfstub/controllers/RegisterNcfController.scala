@@ -48,6 +48,8 @@ class RegisterNcfController @Inject()(
   val ncfAPIDelayConfig: DelayConfig = Delays.config("ncfAPIDelay", actorSystem.settings.config)
 
   def receiveNcfData: Action[JsValue] = Action.async(parse.json) { implicit request =>
+    logger.info(s"NCTS request headers: ${request.headers}")
+
     withDelay(ncfAPIDelayConfig) { () =>
       implicit val correlationId: String = request.headers.get("X-Correlation-ID").getOrElse("-")
 
