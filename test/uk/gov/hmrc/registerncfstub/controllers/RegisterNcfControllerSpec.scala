@@ -18,7 +18,8 @@ package uk.gov.hmrc.registerncfstub.controllers
 
 import akka.actor.ActorSystem
 import akka.stream.Materializer
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.libs.json.Json
 import play.api.test.{DefaultAwaitTimeout, FakeRequest}
@@ -29,7 +30,7 @@ import uk.gov.hmrc.registerncfstub.config.AppConfig
 import uk.gov.hmrc.registerncfstub.model.{NcfRequestData, NcfResponse}
 import uk.gov.hmrc.registerncfstub.services.RegisterNcfService
 
-class RegisterNcfControllerSpec extends WordSpec with DefaultAwaitTimeout with Matchers with GuiceOneAppPerSuite {
+class RegisterNcfControllerSpec extends AnyWordSpec with DefaultAwaitTimeout with Matchers with GuiceOneAppPerSuite {
 
   implicit lazy val materializer: Materializer = app.materializer
   private val env           = Environment.simple()
