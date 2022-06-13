@@ -16,16 +16,14 @@
 
 package uk.gov.hmrc.registerncfstub.services
 
-import play.api.Logger
-
-import javax.inject.{Inject, Singleton}
+import play.api.Logging
 import uk.gov.hmrc.registerncfstub.config.AppConfig
 import uk.gov.hmrc.registerncfstub.model._
 
-@Singleton
-class RegisterNcfService @Inject()(appConfig: AppConfig) {
+import javax.inject.{Inject, Singleton}
 
-  val logger = Logger(this.getClass.getName)
+@Singleton
+class RegisterNcfService @Inject()(appConfig: AppConfig) extends Logging {
 
   def processRegisterNcfRequest(ncfRequestData: NcfRequestData): NcfResult =
     ncfRequestData.MRN.dropRight(1).takeRight(2) match {

@@ -18,10 +18,10 @@ package uk.gov.hmrc.registerncfstub.controllers
 
 import java.time.Instant
 import java.util.UUID
-
 import akka.actor.{ActorSystem, Scheduler}
+
 import javax.inject.{Inject, Singleton}
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -40,9 +40,8 @@ class RegisterNcfController @Inject()(
   registerNcfService: RegisterNcfService,
   cc:                 ControllerComponents)(implicit ec: ExecutionContext = ExecutionContext.Implicits.global)
     extends BackendController(cc)
-    with Delays {
-
-  val logger = Logger(this.getClass.getName)
+    with Delays
+    with Logging {
 
   val scheduler:         Scheduler   = actorSystem.scheduler
   val ncfAPIDelayConfig: DelayConfig = Delays.config("ncfAPIDelay", actorSystem.settings.config)
