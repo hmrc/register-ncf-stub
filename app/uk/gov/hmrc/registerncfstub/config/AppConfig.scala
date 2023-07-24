@@ -18,7 +18,17 @@ package uk.gov.hmrc.registerncfstub.config
 
 import javax.inject.{Inject, Singleton}
 import play.api.Configuration
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.registerncfstub.util.Delays.DelayConfig
+
+import scala.concurrent.duration.FiniteDuration
 
 @Singleton
-class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig) {}
+class AppConfig @Inject() (config: Configuration) {
+  val delayConfig: DelayConfig = {
+    val enabled           = config.get[Boolean]("delays.ncfAPIDelay.enabled")
+    val meanDelay         = config.get[FiniteDuration]("delays.ncfAPIDelay.meanDelay")
+    val standardDeviation = config.get[FiniteDuration]("delays.ncfAPIDelay.standardDeviation")
+    val minimumDelay      = config.get[FiniteDuration]("delays.ncfAPIDelay.minimumDelay")
+    DelayConfig(enabled, meanDelay, standardDeviation, minimumDelay)
+  }
+}

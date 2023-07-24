@@ -25,10 +25,10 @@ import play.api.libs.json.Json
 import play.api.test.{DefaultAwaitTimeout, FakeRequest}
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.registerncfstub.config.AppConfig
 import uk.gov.hmrc.registerncfstub.model.{NcfRequestData, NcfResponse}
 import uk.gov.hmrc.registerncfstub.services.RegisterNcfService
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class RegisterNcfControllerSpec extends AnyWordSpec with DefaultAwaitTimeout with Matchers with GuiceOneAppPerSuite {
 
@@ -36,9 +36,8 @@ class RegisterNcfControllerSpec extends AnyWordSpec with DefaultAwaitTimeout wit
   private val env           = Environment.simple()
   private val configuration = Configuration.load(env)
 
-  private val serviceConfig = new ServicesConfig(configuration)
-  private val appConfig     = new AppConfig(configuration, serviceConfig)
-  private val sCC           = play.api.test.Helpers.stubControllerComponents()
+  private val appConfig = new AppConfig(configuration)
+  private val sCC       = play.api.test.Helpers.stubControllerComponents()
   private val actorSystem: ActorSystem = ActorSystem()
   private val registerNcfService = new RegisterNcfService(appConfig)
 

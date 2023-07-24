@@ -23,7 +23,7 @@ import uk.gov.hmrc.registerncfstub.model._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RegisterNcfService @Inject()(appConfig: AppConfig) extends Logging {
+class RegisterNcfService @Inject() (appConfig: AppConfig) extends Logging {
 
   def processRegisterNcfRequest(ncfRequestData: NcfRequestData): NcfResult =
     ncfRequestData.MRN.dropRight(1).takeRight(2) match {
@@ -39,11 +39,10 @@ class RegisterNcfService @Inject()(appConfig: AppConfig) extends Logging {
       case "40" => SchemaValidationError
       case "41" => CompletedSuccessfully("THREADINGISSUEMRN")
       case "50" => Eis500Error
-      case "54" => {
+      case "54" =>
         logger.info("Request to EIS is due to time out....")
         Thread.sleep(100000000)
         CompletedSuccessfully(ncfRequestData.MRN)
-      }
       case _ => CompletedSuccessfully(ncfRequestData.MRN)
     }
 }
