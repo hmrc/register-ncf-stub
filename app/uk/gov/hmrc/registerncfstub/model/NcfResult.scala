@@ -19,15 +19,15 @@ package uk.gov.hmrc.registerncfstub.model
 sealed trait NcfResult
 
 case class CompletedSuccessfully(mrn: String, responseCode: Int = 0) extends NcfResult
-case class TechnicalError(mrn:        String, responseCode: Int = -1, errorDescription: String = "Technical Error occurred") extends NcfResult
-case class ParsingError(mrn:          String, responseCode: Int = 1, errorDescription: String = "Parsing Error: Request Message could not be read")
+case class TechnicalError(mrn: String, responseCode: Int = -1, errorDescription: String = "Technical Error occurred") extends NcfResult
+case class ParsingError(mrn: String, responseCode: Int = 1, errorDescription: String = "Parsing Error: Request Message could not be read")
     extends NcfResult
-case class InvalidMrn(mrn:           String, responseCode: Int = 2, errorDescription: String = "Invalid MRN") extends NcfResult
-case class UnknownMrn(mrn:           String, responseCode: Int = 3, errorDescription: String = "Unknown MRN") extends NcfResult
-case class InvalidStateOod(mrn:      String, responseCode: Int = 4, errorDescription: String = "Invalid State at Office of Destination") extends NcfResult
-case class InvalidStateOot(mrn:      String, responseCode: Int = 5, errorDescription: String = "Invalid State at Office of Transit") extends NcfResult
+case class InvalidMrn(mrn: String, responseCode: Int = 2, errorDescription: String = "Invalid MRN") extends NcfResult
+case class UnknownMrn(mrn: String, responseCode: Int = 3, errorDescription: String = "Unknown MRN") extends NcfResult
+case class InvalidStateOod(mrn: String, responseCode: Int = 4, errorDescription: String = "Invalid State at Office of Destination") extends NcfResult
+case class InvalidStateOot(mrn: String, responseCode: Int = 5, errorDescription: String = "Invalid State at Office of Transit") extends NcfResult
 case class InvalidCustomsOffice(mrn: String, responseCode: Int = 6, errorDescription: String = "Invalid Customs Office") extends NcfResult
-case class OotNotForCountry(mrn:     String, responseCode: Int = 7, errorDescription: String = "Office of Transit does not belong to country")
+case class OotNotForCountry(mrn: String, responseCode: Int = 7, errorDescription: String = "Office of Transit does not belong to country")
     extends NcfResult
 case object SchemaValidationError extends NcfResult
 case object Eis500Error extends NcfResult

@@ -29,75 +29,74 @@ import uk.gov.hmrc.registerncfstub.config.AppConfig
 import uk.gov.hmrc.registerncfstub.model._
 import uk.gov.hmrc.registerncfstub.services.RegisterNcfService
 import uk.gov.hmrc.registerncfstub.util.Delays
-import uk.gov.hmrc.registerncfstub.util.Delays.DelayConfig
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class RegisterNcfController @Inject()(
+class RegisterNcfController @Inject() (
   actorSystem:        ActorSystem,
   appConfig:          AppConfig,
   registerNcfService: RegisterNcfService,
-  cc:                 ControllerComponents)(implicit ec: ExecutionContext = ExecutionContext.Implicits.global)
+  cc:                 ControllerComponents
+)(implicit ec:        ExecutionContext)
     extends BackendController(cc)
     with Delays
     with Logging {
 
-  val scheduler:         Scheduler   = actorSystem.scheduler
-  val ncfAPIDelayConfig: DelayConfig = Delays.config("ncfAPIDelay", actorSystem.settings.config)
+  val scheduler: Scheduler = actorSystem.scheduler
 
-  def receiveNcfData: Action[JsValue] = Action.async(parse.json) { implicit request =>
-    logger.info(s"NCTS request headers: ${request.headers}")
+  def receiveNcfData: Action[JsValue] =
+    Action.async(parse.json) { implicit request =>
+      logger.info(s"NCTS request headers: ${request.headers}")
 
-    withDelay(ncfAPIDelayConfig) { () =>
-      implicit val correlationId: String = request.headers.get("X-Correlation-ID").getOrElse("-")
+      withDelay(appConfig.delayConfig) { () =>
+        implicit val correlationId: String = request.headers.get("X-Correlation-ID").getOrElse("-")
 
-      request.body.validate[NcfRequestData] match {
-        case JsSuccess(t, _) =>
-          if (t.Office.startsWith("XI"))
-            logger.info("Received request with NI office code")
-          else {
-            logger.info("Received request with GB office code")
-          }
+        request.body.validate[NcfRequestData] match {
+          case JsSuccess(t, _) =>
+            if (t.Office.startsWith("XI"))
+              logger.info("Received request with NI office code")
+            else
+              logger.info("Received request with GB office code")
 
-          registerNcfService.processRegisterNcfRequest(t) match {
-            case CompletedSuccessfully(mrn, responseCode) =>
-              logger.info(s"NCF returning response code $responseCode with HTTP status code 200 for MRN $mrn")
-              responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, None))))
-            case TechnicalError(mrn, responseCode, e) =>
-              logResponse(mrn, responseCode, e, 400)
-              responseWithCorrelationIdHeader(BadRequest(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
-            case ParsingError(mrn, responseCode, e) =>
-              logResponse(mrn, responseCode, e)
-              responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
-            case InvalidMrn(mrn, responseCode, e) =>
-              logResponse(mrn, responseCode, e)
-              responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
-            case UnknownMrn(mrn, responseCode, e) =>
-              logResponse(mrn, responseCode, e)
-              responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
-            case InvalidStateOod(mrn, responseCode, e) =>
-              logResponse(mrn, responseCode, e)
-              responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
-            case InvalidStateOot(mrn, responseCode, e) =>
-              logResponse(mrn, responseCode, e)
-              responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
-            case InvalidCustomsOffice(mrn, responseCode, e) =>
-              logResponse(mrn, responseCode, e)
-              responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
-            case OotNotForCountry(mrn, responseCode, e) =>
-              logResponse(mrn, responseCode, e)
-              responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
-            case SchemaValidationError => returnSchemaValidationError
-            case Eis500Error =>
-              logger.info("NCF returning HTTP status code 500")
-              responseWithCorrelationIdHeader(InternalServerError)
-          }
-        case JsError(_) =>
-          returnSchemaValidationError
+            registerNcfService.processRegisterNcfRequest(t) match {
+              case CompletedSuccessfully(mrn, responseCode) =>
+                logger.info(s"NCF returning response code $responseCode with HTTP status code 200 for MRN $mrn")
+                responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, None))))
+              case TechnicalError(mrn, responseCode, e) =>
+                logResponse(mrn, responseCode, e, 400)
+                responseWithCorrelationIdHeader(BadRequest(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
+              case ParsingError(mrn, responseCode, e) =>
+                logResponse(mrn, responseCode, e)
+                responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
+              case InvalidMrn(mrn, responseCode, e) =>
+                logResponse(mrn, responseCode, e)
+                responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
+              case UnknownMrn(mrn, responseCode, e) =>
+                logResponse(mrn, responseCode, e)
+                responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
+              case InvalidStateOod(mrn, responseCode, e) =>
+                logResponse(mrn, responseCode, e)
+                responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
+              case InvalidStateOot(mrn, responseCode, e) =>
+                logResponse(mrn, responseCode, e)
+                responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
+              case InvalidCustomsOffice(mrn, responseCode, e) =>
+                logResponse(mrn, responseCode, e)
+                responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
+              case OotNotForCountry(mrn, responseCode, e) =>
+                logResponse(mrn, responseCode, e)
+                responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
+              case SchemaValidationError => returnSchemaValidationError
+              case Eis500Error =>
+                logger.info("NCF returning HTTP status code 500")
+                responseWithCorrelationIdHeader(InternalServerError)
+            }
+          case JsError(_) =>
+            returnSchemaValidationError
+        }
       }
     }
-  }
 
   private def returnSchemaValidationError()(implicit correlationId: String): Result = {
     logger.info("NCF returning HTTP status code 400 because payload failed schema validation")
@@ -114,7 +113,8 @@ class RegisterNcfController @Inject()(
             "sourceFaultDetail" -> Json.obj("detail" -> Json.toJson(Seq("Invalid json payload")))
           )
         )
-      ))
+      )
+    )
   }
 
   private def responseWithCorrelationIdHeader(r: Result)(implicit correlationId: String): Result =
@@ -122,5 +122,6 @@ class RegisterNcfController @Inject()(
 
   private def logResponse(mrn: String, responseCode: Int, errorDescription: String, httpStatusCode: Int = 200): Unit =
     logger.info(
-      s"""NCF returning response code ${responseCode.toString} with error "$errorDescription" and HTTP status code ${httpStatusCode.toString} for MRN $mrn""")
+      s"""NCF returning response code ${responseCode.toString} with error "$errorDescription" and HTTP status code ${httpStatusCode.toString} for MRN $mrn"""
+    )
 }
