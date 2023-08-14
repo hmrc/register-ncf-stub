@@ -45,6 +45,31 @@ class RegisterNcfController @Inject() (
 
   val scheduler: Scheduler = actorSystem.scheduler
 
+  //TODO: BT: remove this after the end of the dual running period on 1st December 2023
+  def receiveNcts4Data: Action[JsValue] =
+    Action.async(parse.json) { implicit request =>
+      logger.info(s"NCTS 4 request headers: ${request.headers}")
+
+      withDelay(appConfig.delayConfig) { () =>
+        implicit val correlationId: String = request.headers.get("X-Correlation-ID").getOrElse("-")
+
+        request.body.validate[NcfRequestData] match {
+          case JsSuccess(t, _) =>
+            if (t.Office.startsWith("XI"))
+              logger.info("Received request with NI office code")
+            else
+              logger.info("Received request with GB office code")
+            registerNcfService.processRegisterNcts4Request(t) match {
+              case CompletedSuccessfully(mrn, responseCode) =>
+                logger.info(s"NCF returning response code $responseCode with HTTP status code 200 for MRN $mrn in NCTS 4 request")
+                responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, None))))
+            }
+          case JsError(_) =>
+            returnSchemaValidationError
+        }
+      }
+    }
+
   def receiveNcfData: Action[JsValue] =
     Action.async(parse.json) { implicit request =>
       logger.info(s"NCTS request headers: ${request.headers}")
