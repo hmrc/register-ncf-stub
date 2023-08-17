@@ -113,6 +113,7 @@ class RegisterNcfController @Inject() (
                 logResponse(mrn, responseCode, e)
                 responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
               case SchemaValidationError => returnSchemaValidationError
+              case ForbiddenError        => responseWithCorrelationIdHeader(Forbidden)
               case Eis500Error =>
                 logger.info("NCF returning HTTP status code 500")
                 responseWithCorrelationIdHeader(InternalServerError)

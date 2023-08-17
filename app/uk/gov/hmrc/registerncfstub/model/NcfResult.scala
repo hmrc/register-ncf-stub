@@ -31,3 +31,4 @@ case class OotNotForCountry(mrn: String, responseCode: Int = 7, errorDescription
     extends NcfResult
 case object SchemaValidationError extends NcfResult
 case object Eis500Error extends NcfResult
+case object ForbiddenError extends NcfResult
