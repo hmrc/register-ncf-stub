@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.registerncfstub.util
 
-import akka.actor.Scheduler
-import akka.pattern.after
+import org.apache.pekko.actor.Scheduler
+import org.apache.pekko.pattern.after
 import uk.gov.hmrc.registerncfstub.util.Delays.DelayConfig
 
 import scala.concurrent.{ExecutionContext, Future}

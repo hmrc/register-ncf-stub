@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.registerncfstub.controllers
 
+import org.apache.pekko.actor.{ActorSystem, Scheduler}
+
 import java.time.Instant
 import java.util.UUID
-import akka.actor.{ActorSystem, Scheduler}
-
 import javax.inject.{Inject, Singleton}
 import play.api.Logging
 import play.api.libs.json._
