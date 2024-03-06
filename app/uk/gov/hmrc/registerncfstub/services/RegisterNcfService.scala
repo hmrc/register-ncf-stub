@@ -47,7 +47,7 @@ class RegisterNcfService @Inject() (appConfig: AppConfig) extends Logging {
       case _ => CompletedSuccessfully(ncfRequestData.MRN)
     }
 
-  //TODO: BT: remove this after the end of the dual running period on 1st December 2023
+  // TODO: BT: remove this after the end of the dual running period on 1st December 2023
   def processRegisterNcts4Request(ncfRequestData: NcfRequestData): CompletedSuccessfully =
     CompletedSuccessfully(ncfRequestData.MRN)
 }

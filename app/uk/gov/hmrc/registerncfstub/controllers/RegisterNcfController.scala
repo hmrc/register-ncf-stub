@@ -38,14 +38,14 @@ class RegisterNcfController @Inject() (
   appConfig:          AppConfig,
   registerNcfService: RegisterNcfService,
   cc:                 ControllerComponents
-)(implicit ec:        ExecutionContext)
+)(implicit ec: ExecutionContext)
     extends BackendController(cc)
     with Delays
     with Logging {
 
   val scheduler: Scheduler = actorSystem.scheduler
 
-  //TODO: BT: remove this after the end of the dual running period on 1st December 2023
+  // TODO: BT: remove this after the end of the dual running period on 1st December 2023
   def receiveNcts4Data: Action[JsValue] =
     Action.async(parse.json) { implicit request =>
       logger.info(s"NCTS 4 request headers: ${request.headers}")
