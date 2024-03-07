@@ -20,10 +20,11 @@ lazy val microservice = Project(appName, file("."))
   .settings(integrationTestSettings(): _*)
   .disablePlugins(JUnitXmlReportPlugin)
   .settings(
-    scalacOptions += "-Wconf:src=routes/.*:s", //Silence all warnings in generated routes
+    scalafmtOnCompile := true,
+    scalacOptions += "-Wconf:src=routes/.*:s", // Silence all warnings in generated routes
     scalacOptions += "-Ymacro-annotations"
   )
-  .settings( //fix scaladoc generation in jenkins
+  .settings( // fix scaladoc generation in jenkins
     scalacOptions += "-language:postfixOps"
   )
 
