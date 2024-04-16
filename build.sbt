@@ -27,5 +27,6 @@ lazy val microservice = Project(appName, file("."))
   .settings( // fix scaladoc generation in jenkins
     scalacOptions += "-language:postfixOps"
   )
+  .settings(WartRemoverSettings.settings)
 
 evictionErrorLevel := Level.Warn

@@ -65,7 +65,7 @@ class RegisterNcfController @Inject() (
                 responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, None))))
             }
           case JsError(_) =>
-            returnSchemaValidationError
+            returnSchemaValidationError()
         }
       }
     }
@@ -112,14 +112,14 @@ class RegisterNcfController @Inject() (
               case OotNotForCountry(mrn, responseCode, e) =>
                 logResponse(mrn, responseCode, e)
                 responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
-              case SchemaValidationError => returnSchemaValidationError
+              case SchemaValidationError => returnSchemaValidationError()
               case ForbiddenError        => responseWithCorrelationIdHeader(Forbidden)
               case Eis500Error =>
                 logger.info("NCF returning HTTP status code 500")
                 responseWithCorrelationIdHeader(InternalServerError)
             }
           case JsError(_) =>
-            returnSchemaValidationError
+            returnSchemaValidationError()
         }
       }
     }

@@ -15,10 +15,10 @@
  */
 
 package uk.gov.hmrc.registerncfstub.model
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class NcfResponse(MRN: String, ResponseCode: Int, ErrorDescription: Option[String])
 
 object NcfResponse {
-  implicit val format = Json.format[NcfResponse]
+  implicit val format: OFormat[NcfResponse] = Json.format[NcfResponse]
 }
