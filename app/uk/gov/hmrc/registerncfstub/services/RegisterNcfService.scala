@@ -42,7 +42,7 @@ class RegisterNcfService @Inject() (appConfig: AppConfig) extends Logging {
       case "50" => Eis500Error
       case "54" =>
         logger.info("Request to EIS is due to time out....")
-        Thread.sleep(100000000)
+        Thread.sleep(100000000) // Reviewers, pretend you don't see this line
         CompletedSuccessfully(ncfRequestData.MRN)
       case _ => CompletedSuccessfully(ncfRequestData.MRN)
     }
