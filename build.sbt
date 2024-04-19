@@ -25,6 +25,7 @@ lazy val microservice = Project(appName, file("."))
     scalacOptions += "-Ymacro-annotations"
   )
   .settings( // fix scaladoc generation in jenkins
+    Compile / scalacOptions -= "utf8",
     scalacOptions += "-language:postfixOps"
   )
   .settings(WartRemoverSettings.settings)
