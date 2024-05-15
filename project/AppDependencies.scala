@@ -6,7 +6,8 @@ object AppDependencies {
   private val playVersion      = "play-30"
 
   val compile = Seq(
-    "uk.gov.hmrc" %% s"bootstrap-backend-$playVersion" % bootstrapVersion
+    "uk.gov.hmrc" %% s"bootstrap-backend-$playVersion" % bootstrapVersion,
+    "io.monix"    %% "monix-eval"                      % "3.3.0"
   )
 
   val test = Seq(

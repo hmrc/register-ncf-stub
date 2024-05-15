@@ -16,11 +16,13 @@
 
 package uk.gov.hmrc.registerncfstub.services
 
+import monix.eval.Task
 import play.api.Logging
 import uk.gov.hmrc.registerncfstub.config.AppConfig
 import uk.gov.hmrc.registerncfstub.model._
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.duration.DurationInt
 
 @Singleton
 class RegisterNcfService @Inject() (appConfig: AppConfig) extends Logging {
@@ -42,7 +44,7 @@ class RegisterNcfService @Inject() (appConfig: AppConfig) extends Logging {
       case "50" => Eis500Error
       case "54" =>
         logger.info("Request to EIS is due to time out....")
-        Thread.sleep(100000000) // Reviewers, pretend you don't see this line
+        Task.sleep(100000000.millis)
         CompletedSuccessfully(ncfRequestData.MRN)
       case _ => CompletedSuccessfully(ncfRequestData.MRN)
     }
