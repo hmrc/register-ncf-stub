@@ -40,7 +40,6 @@ class RegisterNcfService @Inject() (appConfig: AppConfig) extends Logging {
       case "07" => OotNotForCountry(ncfRequestData.MRN)
       case "40" => SchemaValidationError
       case "41" => CompletedSuccessfully("THREADINGISSUEMRN")
-      case "43" => ForbiddenError
       case "50" => Eis500Error
       case "54" =>
         logger.info("Request to EIS is due to time out....")
@@ -48,8 +47,4 @@ class RegisterNcfService @Inject() (appConfig: AppConfig) extends Logging {
         CompletedSuccessfully(ncfRequestData.MRN)
       case _ => CompletedSuccessfully(ncfRequestData.MRN)
     }
-
-  // TODO: BT: remove this after the end of the dual running period on 1st December 2023
-  def processRegisterNcts4Request(ncfRequestData: NcfRequestData): CompletedSuccessfully =
-    CompletedSuccessfully(ncfRequestData.MRN)
 }

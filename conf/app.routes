@@ -1,9 +1,4 @@
 # microservice specific routes
 
-# ERMIS (NCTS 5) endpoints
-POST        /ncts5/noticeofcrossingfrontiergb/v1                                uk.gov.hmrc.registerncfstub.controllers.RegisterNcfController.receiveNcfData
-POST        /ncts5/noticeofcrossingfrontierxi/v1                                uk.gov.hmrc.registerncfstub.controllers.RegisterNcfController.receiveNcfData
-
-#NCTS 4 endpoints (TODO remove after dual running period ends on 1st December 2023)
-POST        /goods-vehicle-movement-system/gb/registerncf/v1                    uk.gov.hmrc.registerncfstub.controllers.RegisterNcfController.receiveNcts4Data
-POST        /ctc/registerncfni/v1                                               uk.gov.hmrc.registerncfstub.controllers.RegisterNcfController.receiveNcts4Data
+POST        /goods-vehicle-movement-system/gb/registerncf/v1                    uk.gov.hmrc.registerncfstub.controllers.RegisterNcfController.receiveNcfData
+POST        /ctc/registerncfni/v1                                               uk.gov.hmrc.registerncfstub.controllers.RegisterNcfController.receiveNcfData
