@@ -8,7 +8,7 @@ This code is open source software licensed under the [Apache 2.0 License]("http:
 
 ## Endpoints
 
-```POST /ctc/registerncf/v1```
+```POST /ncts5/noticeofcrossingfrontiergb/v1```
 
 Returns the result of the register NCF process in form of the MRN and a response code, along with an error description if there is an error.
 
