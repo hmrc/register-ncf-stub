@@ -16,10 +16,17 @@ Returns the result of the register NCF process in form of the MRN and a response
 ####Happy path:
 To trigger the happy path, ensure you provide a valid request body with an MRN containing digits '00' in positions 16 and 17 (with the appropriate check digit as the final, 18th character of the MRN).
 ```
-Request Body example:
+Request Body for GB example:
 {
     "MRN": "19FR00012399999009",
     "Office":"GB000011"
+}
+```
+
+Request Body for XI example:
+{
+"MRN": "19FR00012399999009",
+"Office":"XI000011"
 }
 ```
 
@@ -38,10 +45,18 @@ To trigger the unhappy paths, ensure you provide a valid request body with an MR
 The following request will trigger ResponseCode -1 with HTTP status 400:
 
 ```
-Request Body example:
+Request Body for GB example:
 {
     "MRN": "19FR00012399999108",
     "Office":"GB000011"
+}
+```
+
+```
+Request Body for XI example:
+{
+"MRN": "19FR00012399999108",
+"Office":"XI000011"
 }
 ```
 
@@ -75,10 +90,18 @@ Below are the different unhappy path scenarios and the digits to use in position
 In the case where there is a problem with EIS, we will receive a 5xx response from them. In order to trigger this scenario, supply an MRN with '50' in positions 16 and 17 of the MRN.
 
 ```
-Request Body example:
+Request Body for GB example:
 {
     "MRN": "19FR00012399999504",
     "Office":"GB000011"
+}
+```
+
+```
+Request Body for XI example:
+{
+"MRN": "19FR00012399999504",
+"Office":"XI000011"
 }
 ```
 
