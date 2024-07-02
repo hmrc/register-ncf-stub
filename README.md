@@ -23,6 +23,7 @@ Request Body for GB example:
 }
 ```
 
+```
 Request Body for XI example:
 {
 "MRN": "19FR00012399999009",
