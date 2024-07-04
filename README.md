@@ -9,6 +9,7 @@ This code is open source software licensed under the [Apache 2.0 License]("http:
 ## Endpoints
 
 ```POST /ncts5/noticeofcrossingfrontiergb/v1```
+
 ```POST /ncts5/noticeofcrossingfrontierxi/v1```
 
 Returns the result of the register NCF process in form of the MRN and a response code, along with an error description if there is an error.
@@ -26,8 +27,8 @@ Request Body for GB example:
 ```
 Request Body for XI example:
 {
-"MRN": "19FR00012399999009",
-"Office":"XI000011"
+    "MRN": "19FR00012399999009",
+    "Office":"XI000011"
 }
 ```
 
@@ -56,8 +57,8 @@ Request Body for GB example:
 ```
 Request Body for XI example:
 {
-"MRN": "19FR00012399999108",
-"Office":"XI000011"
+    "MRN": "19FR00012399999108",
+    "Office":"XI000011"
 }
 ```
 
@@ -101,8 +102,8 @@ Request Body for GB example:
 ```
 Request Body for XI example:
 {
-"MRN": "19FR00012399999504",
-"Office":"XI000011"
+    "MRN": "19FR00012399999504",
+    "Office":"XI000011"
 }
 ```
 
