@@ -47,7 +47,6 @@ class RegisterNcfController @Inject() (
 
   def receiveNcfData: Action[JsValue] =
     Action.async(parse.json) { request =>
-      given RequestHeader = request
       logger.info(s"NCTS request headers: ${request.headers}")
 
       withDelay(appConfig.delayConfig) { () =>
