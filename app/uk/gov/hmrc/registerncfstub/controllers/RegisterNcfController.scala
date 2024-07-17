@@ -46,7 +46,7 @@ class RegisterNcfController @Inject() (
   val scheduler: Scheduler = actorSystem.scheduler
 
   def receiveNcfData: Action[JsValue] =
-    Action.async(parse.json) { implicit request =>
+    Action.async(parse.json) { request =>
       logger.info(s"NCTS request headers: ${request.headers}")
 
       withDelay(appConfig.delayConfig) { () =>
@@ -87,7 +87,7 @@ class RegisterNcfController @Inject() (
               case OotNotForCountry(mrn, responseCode, e) =>
                 logResponse(mrn, responseCode, e)
                 responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
-              case SchemaValidationError => returnSchemaValidationError
+              case SchemaValidationError => returnSchemaValidationError()
               case Eis500Error =>
                 logger.info("NCF returning HTTP status code 500")
                 responseWithCorrelationIdHeader(InternalServerError)

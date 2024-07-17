@@ -40,7 +40,7 @@ class RegisterNcfControllerSpec extends AnyWordSpec with DefaultAwaitTimeout wit
   private val appConfig = new AppConfig(configuration)
   private val sCC       = play.api.test.Helpers.stubControllerComponents()
   private val actorSystem: ActorSystem = ActorSystem()
-  private val registerNcfService = new RegisterNcfService(appConfig)
+  private val registerNcfService = new RegisterNcfService()
 
   private val controller = new RegisterNcfController(actorSystem: ActorSystem, appConfig: AppConfig, registerNcfService: RegisterNcfService, sCC)
 

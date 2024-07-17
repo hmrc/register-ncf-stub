@@ -15,15 +15,11 @@ lazy val microservice = Project(appName, file("."))
     ScoverageKeys.coverageHighlighting := true,
     playDefaultPort := 8269
   )
-  .settings(scalaVersion := "2.13.12")
+  .settings(ThisBuild / scalaVersion := "3.3.3")
   .configs(IntegrationTest)
   .settings(integrationTestSettings(): _*)
   .disablePlugins(JUnitXmlReportPlugin)
-  .settings(
-    scalafmtOnCompile := true,
-    scalacOptions += "-Wconf:src=routes/.*:s", // Silence all warnings in generated routes
-    scalacOptions += "-Ymacro-annotations"
-  )
+  .settings(scalafmtOnCompile := true)
   .settings( // fix scaladoc generation in jenkins
     Compile / scalacOptions -= "utf8",
     scalacOptions += "-language:postfixOps"

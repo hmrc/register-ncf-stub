@@ -18,14 +18,13 @@ package uk.gov.hmrc.registerncfstub.services
 
 import monix.eval.Task
 import play.api.Logging
-import uk.gov.hmrc.registerncfstub.config.AppConfig
 import uk.gov.hmrc.registerncfstub.model._
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Singleton
 import scala.concurrent.duration.DurationInt
 
 @Singleton
-class RegisterNcfService @Inject() (appConfig: AppConfig) extends Logging {
+class RegisterNcfService extends Logging {
 
   def processRegisterNcfRequest(ncfRequestData: NcfRequestData): NcfResult =
     ncfRequestData.MRN.dropRight(1).takeRight(2) match {
