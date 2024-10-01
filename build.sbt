@@ -20,10 +20,8 @@ lazy val microservice = Project(appName, file("."))
   .settings(integrationTestSettings(): _*)
   .disablePlugins(JUnitXmlReportPlugin)
   .settings(scalafmtOnCompile := true)
-  .settings( // fix scaladoc generation in jenkins
-    Compile / scalacOptions -= "utf8",
+  .settings(
     scalacOptions += "-language:postfixOps"
   )
-  .settings(WartRemoverSettings.settings)
 
 evictionErrorLevel := Level.Warn
