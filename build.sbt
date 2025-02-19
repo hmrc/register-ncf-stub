@@ -21,7 +21,8 @@ lazy val microservice = Project(appName, file("."))
   .disablePlugins(JUnitXmlReportPlugin)
   .settings(scalafmtOnCompile := true)
   .settings(
-    scalacOptions += "-language:postfixOps"
+    scalacOptions += "-language:postfixOps",
+    scalacOptions += "-no-indent"
   )
 
 evictionErrorLevel := Level.Warn
