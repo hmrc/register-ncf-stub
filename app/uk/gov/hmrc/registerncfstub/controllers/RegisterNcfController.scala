@@ -87,6 +87,9 @@ class RegisterNcfController @Inject() (
               case OotNotForCountry(mrn, responseCode, e) =>
                 logResponse(mrn, responseCode, e)
                 responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
+              case DocNotReadyForClearance(mrn, responseCode, e) =>
+                logResponse(mrn, responseCode, e)
+                responseWithCorrelationIdHeader(Ok(Json.toJson(NcfResponse(mrn, responseCode, Some(e)))))
               case SchemaValidationError => returnSchemaValidationError()
               case Eis500Error =>
                 logger.info("NCF returning HTTP status code 500")

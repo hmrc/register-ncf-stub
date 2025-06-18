@@ -143,6 +143,16 @@ class RegisterNcfControllerSpec extends AnyWordSpec with DefaultAwaitTimeout wit
       contentAsJson(result) shouldBe expectedResponse
     }
 
+    "Return a 200 response with doc not ready for clearance body" in {
+      val requestData      = Json.toJson(NcfRequestData("25FR000123Q86L7085", "GB000060"))
+      val expectedResponse = Json.toJson(NcfResponse("25FR000123Q86L7085", 8, Some("Supporting document not ready for clearance")))
+
+      val result = controller.receiveNcfData(FakeRequest().withBody(requestData))
+
+      status(result)        shouldBe OK
+      contentAsJson(result) shouldBe expectedResponse
+    }
+
     "Return a 5xx response for any other server error from EIS" in {
       val requestData = Json.toJson(NcfRequestData("19GB00006010015500", "GB000060"))
 
