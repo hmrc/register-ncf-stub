@@ -15,7 +15,7 @@ lazy val microservice = Project(appName, file("."))
     ScoverageKeys.coverageHighlighting := true,
     playDefaultPort := 8269
   )
-  .settings(ThisBuild / scalaVersion := "3.3.3")
+  .settings(ThisBuild / scalaVersion := "3.6.4")
   .configs(IntegrationTest)
   .settings(integrationTestSettings(): _*)
   .disablePlugins(JUnitXmlReportPlugin)
