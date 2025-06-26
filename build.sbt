@@ -9,13 +9,26 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     majorVersion := 0,
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
-    ScoverageKeys.coverageExcludedFiles := "<empty>;com.kenshoo.play.metrics.*;.*definition.*;prod.*;testOnlyDoNotUseInAppConf.*;app.*;.*BuildInfo.*;.*Routes.*;.*repositories.*;.*controllers.test.*;.*services.test.*",
+    ScoverageKeys.coverageExcludedFiles :=
+      """
+        |<empty>;
+        |.*metrics.*;
+        |.*definition.*;
+        |prod.*;
+        |testOnlyDoNotUseInAppConf.*;
+        |app.*;
+        |.*BuildInfo.*;
+        |.*Routes.*;
+        |.*repositories.*;
+        |.*controllers.test.*;
+        |.*services.test.*
+     """.stripMargin.replaceAll("\n", ""),
     ScoverageKeys.coverageMinimumStmtTotal := 90,
     ScoverageKeys.coverageFailOnMinimum := false,
     ScoverageKeys.coverageHighlighting := true,
     playDefaultPort := 8269
   )
-  .settings(ThisBuild / scalaVersion := "3.3.3")
+  .settings(ThisBuild / scalaVersion := "3.6.4")
   .configs(IntegrationTest)
   .settings(integrationTestSettings(): _*)
   .disablePlugins(JUnitXmlReportPlugin)
