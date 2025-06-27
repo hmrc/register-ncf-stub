@@ -31,5 +31,7 @@ final case class InvalidStateOot(mrn: String, responseCode: Int = 5, errorDescri
 final case class InvalidCustomsOffice(mrn: String, responseCode: Int = 6, errorDescription: String = "Invalid Customs Office") extends NcfResult
 final case class OotNotForCountry(mrn: String, responseCode: Int = 7, errorDescription: String = "Office of Transit does not belong to country")
     extends NcfResult
+final case class DocNotReadyForClearance(mrn: String, responseCode: Int = 8, errorDescription: String = "Supporting document not ready for clearance")
+    extends NcfResult
 case object SchemaValidationError extends NcfResult
 case object Eis500Error extends NcfResult
