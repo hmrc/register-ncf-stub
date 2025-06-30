@@ -75,18 +75,19 @@ Response body example:
 
 Below are the different unhappy path scenarios and the digits to use in positions 16 and 17 of the MRN:
 
-| *Scenario* | *Digits* |
-|--------|----|
-| Technical error | 10 |
-| Schema validation error | 40 |
-| Parsing error | 01 |
-| Invalid MRN | 02 |
-| Unknown MRN | 03 |
-| Invalid state at office of destination | 04 |
-| Invalid state at office of transit | 05 |
-| Invalid customs office | 06 |
-| Office of transit does not belong to country | 07 |
-| MRN Mismatch | 41 |
+| *Scenario*                                   | *Digits* |
+|----------------------------------------------|----------|
+| Technical error                              | 10       |
+| Schema validation error                      | 40       |
+| Parsing error                                | 01       |
+| Invalid MRN                                  | 02       |
+| Unknown MRN                                  | 03       |
+| Invalid state at office of destination       | 04       |
+| Invalid state at office of transit           | 05       |
+| Invalid customs office                       | 06       |
+| Office of transit does not belong to country | 07       |
+| Supporting document not ready for clearance  | 08       |
+| MRN Mismatch                                 | 41       |
 
 ###EIS 500 error:
 In the case where there is a problem with EIS, we will receive a 5xx response from them. In order to trigger this scenario, supply an MRN with '50' in positions 16 and 17 of the MRN.
