@@ -63,7 +63,7 @@ class DelaysSpec extends AnyWordSpec with Matchers {
       val start = System.nanoTime()
       TestDelays.withDelay(config)(() => "done").map { result =>
         val elapsed = (System.nanoTime() - start).nanos
-        elapsed should be >= config.minimumDelay
+        elapsed  should be >= config.minimumDelay
         result shouldBe "done"
         succeed
       }

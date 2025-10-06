@@ -55,6 +55,36 @@ class RegisterNcfControllerSpec extends AnyWordSpec with DefaultAwaitTimeout wit
       contentAsJson(result) shouldBe expectedResponse
     }
 
+    "Return a success response with a threading issue MRN" in {
+      val requestData      = Json.toJson(NcfRequestData("19GB0000601001F410", "GB000060"))
+      val expectedResponse = Json.toJson(NcfResponse("THREADINGISSUEMRN", 0, None))
+
+      val result = controller.receiveNcfData(FakeRequest().withBody(requestData))
+
+      status(result)        shouldBe OK
+      contentAsJson(result) shouldBe expectedResponse
+    }
+
+    "Return a success response for any other unexpected status from EIS" in {
+      val requestData      = Json.toJson(NcfRequestData("19GB00006010015990", "GB000060"))
+      val expectedResponse = Json.toJson(NcfResponse("19GB00006010015990", 0, None))
+
+      val result = controller.receiveNcfData(FakeRequest().withBody(requestData))
+
+      status(result)        shouldBe OK
+      contentAsJson(result) shouldBe expectedResponse
+    }
+
+    "Return a success response for an EIS timeout" in {
+      val requestData      = Json.toJson(NcfRequestData("19GB00006010015540", "GB000060"))
+      val expectedResponse = Json.toJson(NcfResponse("19GB00006010015540", 0, None))
+
+      val result = controller.receiveNcfData(FakeRequest().withBody(requestData))
+
+      status(result)        shouldBe OK
+      contentAsJson(result) shouldBe expectedResponse
+    }
+
     "Return a 400 response with a technical error body" in {
       val requestData      = Json.toJson(NcfRequestData("19GB0000601001F103", "GB000060"))
       val expectedResponse = Json.toJson(NcfResponse("19GB0000601001F103", -1, Some("Technical Error occurred")))
@@ -153,7 +183,7 @@ class RegisterNcfControllerSpec extends AnyWordSpec with DefaultAwaitTimeout wit
       contentAsJson(result) shouldBe expectedResponse
     }
 
-    "Return a 5xx response for any other server error from EIS" in {
+    "Return a 5xx response for an error from EIS" in {
       val requestData = Json.toJson(NcfRequestData("19GB00006010015500", "GB000060"))
 
       val result = controller.receiveNcfData(FakeRequest().withBody(requestData))

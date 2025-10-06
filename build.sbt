@@ -21,10 +21,12 @@ lazy val microservice = Project(appName, file("."))
         |.*Routes.*;
         |.*repositories.*;
         |.*controllers.test.*;
-        |.*services.test.*
+        |.*services.test.*;
+        |.*model.NcfRequestData.*;
+        |.*model.NcfResponse.*;
      """.stripMargin.replaceAll("\n", ""),
     ScoverageKeys.coverageMinimumStmtTotal := 90,
-    ScoverageKeys.coverageFailOnMinimum := false,
+    ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
     playDefaultPort := 8269
   )
